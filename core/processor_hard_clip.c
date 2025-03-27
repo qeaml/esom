@@ -17,21 +17,22 @@ static size_t hardClipBufferSize(Processor *processor, size_t inputSize) {
   return inputSize;
 }
 
-static void hardClipProcess(Processor *processor, Buffer *buffer) {
+static void hardClipProcess(Processor *processor, const Buffer *src, Buffer *dst) {
   HardClipData *data = (HardClipData *)processor->data;
-  for(size_t i = 0; i < buffer->length; i++) {
-    Sample *sample = &buffer->samples[i];
+  for(size_t i = 0; i < dst->length; i++) {
+    const Sample *srcSample = &src->samples[i];
+    Sample *dstSample = &dst->samples[i];
     if(data->synched) {
-      if(sample->left > data->threshold || sample->right > data->threshold) {
-        sample->left = data->threshold;
-        sample->right = data->threshold;
+      if(srcSample->left > data->threshold || srcSample->right > data->threshold) {
+        dstSample->left = data->threshold;
+        dstSample->right = data->threshold;
       }
     } else {
-      if(sample->left > data->threshold) {
-        sample->left = data->threshold;
+      if(srcSample->left > data->threshold) {
+        dstSample->left = data->threshold;
       }
-      if(sample->right > data->threshold) {
-        sample->right = data->threshold;
+      if(srcSample->right > data->threshold) {
+        dstSample->right = data->threshold;
       }
     }
   }

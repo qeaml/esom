@@ -8,8 +8,8 @@ size_t processorBufferSize(Processor *processor, size_t inputSize) {
   return processor->bufferSize(processor, inputSize);
 }
 
-void processorProcess(Processor *processor, Buffer *buffer) {
-  processor->process(processor, buffer);
+void processorProcess(Processor *processor, const Buffer *src, Buffer *dst) {
+  processor->process(processor, src, dst);
 }
 
 void processorDestroy(Processor *processor) {
@@ -24,5 +24,6 @@ void processorDestroy(Processor *processor) {
 Processor mkProcessor(const char *name) {
   PROCESSOR(hardClip, mkHardClipProcessor);
   PROCESSOR(gain, mkGainProcessor);
+  PROCESSOR(glitchStretch, mkGlitchStretchProcessor);
   return (Processor){NULL};
 }

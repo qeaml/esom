@@ -2,21 +2,11 @@
 #include "core/source.h"
 #include "core/processor.h"
 
-static Buffer applyProcessor(Buffer *buffer, Processor *processor) {
-  size_t bufferLength = processor->bufferSize(processor, buffer->length);
-  if(bufferLength < buffer->length) {
-    buffer->length = bufferLength;
-    processorProcess(processor, buffer);
-    return emptyBuffer();
-  }
-  if(bufferLength == buffer->length) {
-    processorProcess(processor, buffer);
-    return emptyBuffer();
-  }
-  Buffer newBuffer = mkBuffer(bufferLength, buffer->sampleRate);
-  copyBuffer(&newBuffer, buffer);
-  processorProcess(processor, buffer);
-  return newBuffer;
+static Buffer applyProcessor(const Buffer *src, Processor *processor) {
+  size_t bufferLength = processor->bufferSize(processor, src->length);
+  Buffer dst = mkBuffer(bufferLength, src->sampleRate);
+  processorProcess(processor, src, &dst);
+  return dst;
 }
 
 static void saveBufferToFile(const Buffer *buffer, const char *filename) {
@@ -29,31 +19,24 @@ int main() {
   int sampleRate = DEFAULT_SAMPLE_RATE;
 
   Source source = mkSource("sine");
-  sourceSetParam(&source, "duration", 1.5);
+  sourceSetParam(&source, "duration", 0.1);
   sourceSetParam(&source, "freq", 500.0);
   sourceSetParam(&source, "amplitude", 0.9);
 
-  Processor gain = mkProcessor("gain");
-  processorSetParam(&gain, "gain", 1.3);
-
-  Processor hardClip = mkProcessor("hardClip");
-  processorSetParam(&hardClip, "threshold", 0.9);
-  processorSetParam(&hardClip, "synched", 1);
+  Processor processor = mkProcessor("glitchStretch");
+  processorSetParam(&processor, "factor", 10.0);
 
   size_t bufferLength = source.bufferSize(&source, sampleRate);
-  Buffer buffer = mkBuffer(sampleRate, bufferLength);
-  sourceFillBuffer(&source, &buffer);
-  saveBufferToFile(&buffer, "sine.wav");
+  Buffer src = mkBuffer(sampleRate, bufferLength);
+  sourceFillBuffer(&source, &src);
+  saveBufferToFile(&src, "test/raw.wav");
+  Buffer dst = applyProcessor(&src, &processor);
+  saveBufferToFile(&dst, "test/processed.wav");
+  destroyBuffer(&dst);
 
-  applyProcessor(&buffer, &gain);
-  saveBufferToFile(&buffer, "sine_gain.wav");
-  applyProcessor(&buffer, &hardClip);
-  saveBufferToFile(&buffer, "sine_gain_hard_clip.wav");
-
-  destroyBuffer(&buffer);
+  destroyBuffer(&src);
   sourceDestroy(&source);
-  processorDestroy(&gain);
-  processorDestroy(&hardClip);
+  processorDestroy(&processor);
 
   return 0;
 }

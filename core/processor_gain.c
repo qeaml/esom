@@ -15,12 +15,11 @@ static size_t gainBufferSize(Processor *processor, size_t inputSize) {
   return inputSize;
 }
 
-static void gainProcess(Processor *processor, Buffer *buffer) {
+static void gainProcess(Processor *processor, const Buffer *src, Buffer *dst) {
   GainData *data = (GainData *)processor->data;
-  for(size_t i = 0; i < buffer->length; i++) {
-    Sample *sample = &buffer->samples[i];
-    sample->left *= data->gain;
-    sample->right *= data->gain;
+  for(size_t i = 0; i < dst->length; i++) {
+    dst->samples[i].left = src->samples[i].left * data->gain;
+    dst->samples[i].right = src->samples[i].right * data->gain;
   }
 }
 
