@@ -1,5 +1,6 @@
 #include "processor.h"
 
+#include <math.h>
 #include <stdlib.h>
 
 typedef struct HardClipDataS {
@@ -17,23 +18,41 @@ static size_t hardClipBufferSize(Processor *processor, size_t inputSize) {
   return inputSize;
 }
 
+static Sample clipSynched(Sample *sample, float thresh) {
+  Sample out;
+  if(fabs(sample->left) > thresh || fabs(sample->right) >= thresh) {
+    out.left = copysignf(thresh, sample->left);
+    out.right = copysignf(thresh, sample->right);
+  } else {
+    out = *sample;
+  }
+  return out;
+}
+
+static Sample clipIndep(Sample *sample, float thresh) {
+  Sample out;
+  if(fabs(sample->left) > thresh) {
+    out.left = copysignf(thresh, sample->left);
+  } else {
+    out.left = sample->left;
+  }
+  if(fabs(sample->right) > thresh) {
+    out.right = copysignf(thresh, sample->right);
+  } else {
+    out.right = sample->right;
+  }
+  return out;
+}
+
 static void hardClipProcess(Processor *processor, const Buffer *src, Buffer *dst) {
   HardClipData *data = (HardClipData *)processor->data;
   for(size_t i = 0; i < dst->length; i++) {
     const Sample *srcSample = &src->samples[i];
     Sample *dstSample = &dst->samples[i];
     if(data->synched) {
-      if(srcSample->left > data->threshold || srcSample->right > data->threshold) {
-        dstSample->left = data->threshold;
-        dstSample->right = data->threshold;
-      }
+      dst->samples[i] = clipSynched(&src->samples[i], data->threshold);
     } else {
-      if(srcSample->left > data->threshold) {
-        dstSample->left = data->threshold;
-      }
-      if(srcSample->right > data->threshold) {
-        dstSample->right = data->threshold;
-      }
+      dst->samples[i] = clipIndep(&src->samples[i], data->threshold);
     }
   }
 }

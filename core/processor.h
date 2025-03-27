@@ -29,6 +29,8 @@ Processor mkProcessor(const char *name);
 Processor mkHardClipProcessor(void);
 Processor mkGainProcessor(void);
 Processor mkGlitchStretchProcessor(void);
+Processor mkFadeInProcessor(void);
+Processor mkFadeOutProcessor(void);
 
 /* utility macro for processorSetParam implementations */
 #define PROCESSOR_PARAM(data, paramName) \
