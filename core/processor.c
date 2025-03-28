@@ -25,6 +25,7 @@ Processor mkProcessor(const char *name) {
   PROCESSOR(hardClip, mkHardClipProcessor);
   PROCESSOR(gain, mkGainProcessor);
   PROCESSOR(glitchStretch, mkGlitchStretchProcessor);
+  PROCESSOR(interpStretch, mkInterpStretchProcessor);
   PROCESSOR(fadeIn, mkFadeInProcessor);
   PROCESSOR(fadeOut, mkFadeOutProcessor);
   return (Processor){NULL};

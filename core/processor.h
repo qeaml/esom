@@ -29,6 +29,7 @@ Processor mkProcessor(const char *name);
 Processor mkHardClipProcessor(void);
 Processor mkGainProcessor(void);
 Processor mkGlitchStretchProcessor(void);
+Processor mkInterpStretchProcessor(void);
 Processor mkFadeInProcessor(void);
 Processor mkFadeOutProcessor(void);
 
