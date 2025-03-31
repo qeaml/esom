@@ -15,13 +15,15 @@ static void saveBufferToFile(const Buffer *buffer, const char *filename) {
   fclose(file);
 }
 
-int main() {
+int main(int argc, char **argv) {
   int sampleRate = DEFAULT_SAMPLE_RATE;
 
-  Source source = mkSource("Noise");
-  sourceSetParam(&source, "duration", 0.05);
-  sourceSetParam(&source, "freq", 1760.0);
-  sourceSetParam(&source, "amplitude", 0.9);
+  if(argc < 2) {
+    return 0;
+  }
+
+  Source source = mkSource("Sample");
+  sourceSetParam(&source, "path", argv[1]);
 
   size_t bufferLength = source.bufferSize(&source, sampleRate);
   Buffer raw = mkBuffer(sampleRate, bufferLength);

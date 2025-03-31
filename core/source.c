@@ -1,7 +1,11 @@
 #include "source.h"
 
-void sourceSetParam(Source *source, const char *param, float value) {
-  source->setParam(source, param, value);
+void sourceSetFloatParam(Source *source, const char *param, float value) {
+  source->setFloatParam(source, param, value);
+}
+
+void sourceSetStringParam(Source *source, const char *param, const char *value) {
+  source->setStringParam(source, param, value);
 }
 
 size_t sourceBufferSize(Source *source, int sampleRate) {

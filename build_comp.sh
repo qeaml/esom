@@ -14,7 +14,7 @@ mkdir -p "build/$COMP"
 
 for f in "$COMP"/*.c; do
   echo "Compiling $f"
-  gcc $CFLAGS -o "build/$COMP/$(basename "$f").o" -c "$f"
+  gcc $CFLAGS -std=c11 -o "build/$COMP/$(basename "$f").o" -c "$f"
 done
 
 echo "Creating static library lib$COMP.a"

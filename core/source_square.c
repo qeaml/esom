@@ -9,12 +9,15 @@ typedef struct {
   float amplitude;
 } SquareData;
 
-static void squareSetParam(Source *source, const char *name, float value) {
+static void squareSetFloatParam(Source *source, const char *param, float value) {
   SquareData *data = source->data;
   SOURCE_PARAM(data, duration);
   SOURCE_PARAM(data, freq);
   SOURCE_PARAM(data, phase);
   SOURCE_PARAM(data, amplitude);
+}
+
+static void squareSetStringParam(Source *source, const char *param, const char *value) {
 }
 
 static size_t squareBufferSize(Source *source, int sampleRate) {
@@ -48,7 +51,8 @@ static void squareDestroy(Source *source) {
 
 Source mkSquareSource() {
   Source source;
-  source.setParam = squareSetParam;
+  source.setFloatParam = squareSetFloatParam;
+  source.setStringParam = squareSetStringParam;
   source.bufferSize = squareBufferSize;
   source.fillBuffer = squareFillBuffer;
   source.destroy = squareDestroy;

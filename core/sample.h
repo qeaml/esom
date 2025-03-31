@@ -4,6 +4,9 @@
 #include <stdio.h>
 
 #define DEFAULT_SAMPLE_RATE 44100
+#ifndef M_PI
+#define M_PI 3.1415926535897932384626433
+#endif
 
 typedef struct SampleS Sample;
 

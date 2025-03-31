@@ -10,12 +10,15 @@ typedef struct {
   float amplitude;
 } SineData;
 
-static void sineSetParam(Source *source, const char *name, float value) {
+static void sineSetFloatParam(Source *source, const char *param, float value) {
   SineData *data = source->data;
   SOURCE_PARAM(data, duration);
   SOURCE_PARAM(data, freq);
   SOURCE_PARAM(data, phase);
   SOURCE_PARAM(data, amplitude);
+}
+
+static void sineSetStringParam(Source *source, const char *param, const char *value) {
 }
 
 static size_t sineBufferSize(Source *source, int sampleRate) {
@@ -46,7 +49,8 @@ static void sineDestroy(Source *source) {
 
 Source mkSineSource() {
   Source source;
-  source.setParam = sineSetParam;
+  source.setFloatParam = sineSetFloatParam;
+  source.setStringParam = sineSetStringParam;
   source.bufferSize = sineBufferSize;
   source.fillBuffer = sineFillBuffer;
   source.destroy = sineDestroy;

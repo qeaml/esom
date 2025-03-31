@@ -7,10 +7,13 @@ typedef struct {
   float amplitude;
 } NoiseData;
 
-static void noiseSetParam(Source *source, const char *name, float value) {
+static void noiseSetFloatParam(Source *source, const char *param, float value) {
   NoiseData *data = source->data;
   SOURCE_PARAM(data, duration);
   SOURCE_PARAM(data, amplitude);
+}
+
+static void noiseSetStringParam(Source *source, const char *param, const char *value) {
 }
 
 static size_t noiseBufferSize(Source *source, int sampleRate) {
@@ -35,7 +38,8 @@ static void noiseDestroy(Source *source) {
 
 Source mkNoiseSource() {
   Source source;
-  source.setParam = noiseSetParam;
+  source.setFloatParam = noiseSetFloatParam;
+  source.setStringParam = noiseSetStringParam;
   source.bufferSize = noiseBufferSize;
   source.fillBuffer = noiseFillBuffer;
   source.destroy = noiseDestroy;
