@@ -26,10 +26,6 @@ void sourceDestroy(Source *source);
 
 Source mkSource(const char *name);
 
-Source mkSourceSine(void);
-Source mkSourceSquare(void);
-Source mkSourceNoise(void);
-
 /* utility macro for sourceSetParam implementations */
 #define SOURCE_PARAM(data, paramName) \
   if(strcmp(name, #paramName) == 0) {    \
@@ -42,3 +38,8 @@ Source mkSourceNoise(void);
     data->paramName = value != 0.0f;          \
     return;                                   \
   }
+
+#define SOURCES(X) \
+  X(Sine) \
+  X(Square) \
+  X(Noise)

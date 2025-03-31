@@ -18,67 +18,39 @@ static void saveBufferToFile(const Buffer *buffer, const char *filename) {
 int main() {
   int sampleRate = DEFAULT_SAMPLE_RATE;
 
-  Source source = mkSource("sine");
+  Source source = mkSource("Noise");
   sourceSetParam(&source, "duration", 0.05);
-  sourceSetParam(&source, "freq", 2400.0);
-  sourceSetParam(&source, "amplitude", 0.5);
+  sourceSetParam(&source, "freq", 1760.0);
+  sourceSetParam(&source, "amplitude", 0.9);
 
   size_t bufferLength = source.bufferSize(&source, sampleRate);
   Buffer raw = mkBuffer(sampleRate, bufferLength);
   sourceFillBuffer(&source, &raw);
-  saveBufferToFile(&raw, "test/raw.wav");
-
-  Processor fadeOut = mkProcessor("fadeOut");
-  processorSetParam(&fadeOut, "duration", 0.25);
-  Buffer fadedOut = applyProcessor(&raw, &fadeOut);
-
-  Processor clip = mkProcessor("hardClip");
-  processorSetParam(&clip, "threshold", 0.5);
-
-  Processor stretch = mkProcessor("interpStretch");
-  processorSetParam(&stretch, "factor", 10.0);
-
-  processorSetParam(&stretch, "interp", 0.0);
-  Buffer interp0 = applyProcessor(&raw, &stretch);
-  Buffer interp0Clipped = applyProcessor(&interp0, &clip);
-  Buffer interp0Faded = applyProcessor(&interp0Clipped, &fadeOut);
-  saveBufferToFile(&interp0Faded, "test/interp0.wav");
-  destroyBuffer(&interp0Faded);
-  destroyBuffer(&interp0Clipped);
-  destroyBuffer(&interp0);
-
-  processorSetParam(&stretch, "interp", 1.0);
-  Buffer interp1 = applyProcessor(&raw, &stretch);
-  Buffer interp1Clipped = applyProcessor(&interp1, &clip);
-  Buffer interp1Faded = applyProcessor(&interp1Clipped, &fadeOut);
-  saveBufferToFile(&interp1Faded, "test/interp1.wav");
-  destroyBuffer(&interp1Faded);
-  destroyBuffer(&interp1Clipped);
-  destroyBuffer(&interp1);
-
-  processorSetParam(&stretch, "interp", 2.0);
-  Buffer interp2 = applyProcessor(&raw, &stretch);
-  Buffer interp2Clipped = applyProcessor(&interp2, &clip);
-  Buffer interp2Faded = applyProcessor(&interp2Clipped, &fadeOut);
-  saveBufferToFile(&interp2Faded, "test/interp2.wav");
-  destroyBuffer(&interp2Faded);
-  destroyBuffer(&interp2Clipped);
-  destroyBuffer(&interp2);
-
-  processorSetParam(&stretch, "interp", 3.0);
-  Buffer interp3 = applyProcessor(&raw, &stretch);
-  Buffer interp3Clipped = applyProcessor(&interp3, &clip);
-  Buffer interp3Faded = applyProcessor(&interp3Clipped, &fadeOut);
-  saveBufferToFile(&interp3Faded, "test/interp3.wav");
-  destroyBuffer(&interp3Faded);
-  destroyBuffer(&interp3Clipped);
-  destroyBuffer(&interp3);
-
-  processorDestroy(&stretch);
-  processorDestroy(&clip);
-  processorDestroy(&fadeOut);
-  destroyBuffer(&raw);
   sourceDestroy(&source);
 
+  Processor interp = mkProcessor("InterpStretch");
+  processorSetParam(&interp, "factor", 4.0f);
+  // 3.0f -> INTERP_BIT_FUCK
+  // 4.0f -> INTERP_SMOOTHSTEP
+  processorSetParam(&interp, "interp", 4.0f);
+  Buffer stretched = applyProcessor(&raw, &interp);
+  saveBufferToFile(&stretched, "test/stretched.wav");
+  processorDestroy(&interp);
+  destroyBuffer(&raw);
+
+  Processor average = mkProcessor("Average");
+  processorSetParam(&average, "bigWindow", 1);
+  Buffer averaged = applyProcessor(&stretched, &average);
+  saveBufferToFile(&averaged, "test/averaged.wav");
+  processorDestroy(&average);
+  destroyBuffer(&averaged);
+
+  Processor power = mkProcessor("Power");
+  processorSetParam(&power, "exponent", 3.0f);
+  Buffer powered = applyProcessor(&stretched, &power);
+  saveBufferToFile(&powered, "test/powered.wav");
+  destroyBuffer(&powered);
+
+  destroyBuffer(&stretched);
   return 0;
 }

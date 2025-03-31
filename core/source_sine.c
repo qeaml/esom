@@ -44,7 +44,7 @@ static void sineDestroy(Source *source) {
   free(source->data);
 }
 
-Source mkSourceSine() {
+Source mkSineSource() {
   Source source;
   source.setParam = sineSetParam;
   source.bufferSize = sineBufferSize;

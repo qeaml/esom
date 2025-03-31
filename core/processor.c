@@ -16,17 +16,17 @@ void processorDestroy(Processor *processor) {
   processor->destroy(processor);
 }
 
-#define PROCESSOR(processorName, factory) \
-  if(strcmp(name, #processorName) == 0) { \
-    return factory();                     \
+#define PROCESSOR_MK_FUNC(name) \
+  Processor mk##name##Processor(void);
+
+PROCESSORS(PROCESSOR_MK_FUNC)
+
+#define PROCESSOR_MK(processorName)        \
+  if(strcmp(name, #processorName) == 0) {  \
+    return mk##processorName##Processor(); \
   }
 
 Processor mkProcessor(const char *name) {
-  PROCESSOR(hardClip, mkHardClipProcessor);
-  PROCESSOR(gain, mkGainProcessor);
-  PROCESSOR(glitchStretch, mkGlitchStretchProcessor);
-  PROCESSOR(interpStretch, mkInterpStretchProcessor);
-  PROCESSOR(fadeIn, mkFadeInProcessor);
-  PROCESSOR(fadeOut, mkFadeOutProcessor);
+  PROCESSORS(PROCESSOR_MK)
   return (Processor){NULL};
 }

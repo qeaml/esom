@@ -26,13 +26,6 @@ void processorDestroy(Processor *processor);
 
 Processor mkProcessor(const char *name);
 
-Processor mkHardClipProcessor(void);
-Processor mkGainProcessor(void);
-Processor mkGlitchStretchProcessor(void);
-Processor mkInterpStretchProcessor(void);
-Processor mkFadeInProcessor(void);
-Processor mkFadeOutProcessor(void);
-
 /* utility macro for processorSetParam implementations */
 #define PROCESSOR_PARAM(data, paramName) \
   if(strcmp(name, #paramName) == 0) {    \
@@ -45,3 +38,14 @@ Processor mkFadeOutProcessor(void);
     data->paramName = value != 0.0f;          \
     return;                                   \
   }
+
+#define PROCESSORS(X) \
+  X(HardClip) \
+  X(Gain) \
+  X(GlitchStretch) \
+  X(InterpStretch) \
+  X(GrainStretch) \
+  X(FadeIn) \
+  X(FadeOut) \
+  X(Average) \
+  X(Power)

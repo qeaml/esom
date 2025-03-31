@@ -46,7 +46,7 @@ static void squareDestroy(Source *source) {
   free(source->data);
 }
 
-Source mkSourceSquare() {
+Source mkSquareSource() {
   Source source;
   source.setParam = squareSetParam;
   source.bufferSize = squareBufferSize;

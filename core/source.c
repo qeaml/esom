@@ -16,14 +16,17 @@ void sourceDestroy(Source *source) {
   source->destroy(source);
 }
 
-#define SOURCE(sourceName, factory) \
+#define SOURCE_MK_FUNC(name) \
+  Source mk##name##Source(void);
+
+SOURCES(SOURCE_MK_FUNC)
+
+#define SOURCE_MK(sourceName)          \
   if(strcmp(name, #sourceName) == 0) { \
-    return factory();                  \
+    return mk##sourceName##Source();   \
   }
 
 Source mkSource(const char *name) {
-  SOURCE(sine, mkSourceSine);
-  SOURCE(square, mkSourceSquare);
-  SOURCE(noise, mkSourceNoise);
+  SOURCES(SOURCE_MK)
   return (Source){NULL};
 }

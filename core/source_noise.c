@@ -33,7 +33,7 @@ static void noiseDestroy(Source *source) {
   free(source->data);
 }
 
-Source mkSourceNoise() {
+Source mkNoiseSource() {
   Source source;
   source.setParam = noiseSetParam;
   source.bufferSize = noiseBufferSize;

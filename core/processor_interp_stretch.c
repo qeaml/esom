@@ -6,6 +6,7 @@
 #define INTERP_POW2 1.0f
 #define INTERP_INV_LINEAR 2.0f
 #define INTERP_BIT_FUCK 3.0f
+#define INTERP_SMOOTHSTEP 4.0f
 
 typedef struct {
   float factor;
@@ -73,6 +74,20 @@ static Sample bitFuckInterpSample(Sample a, Sample b, float t) {
   return result;
 }
 
+static float smoothstepInterp(float a, float b, float t) {
+  float x = t * t * (3.0f - 2.0f * t);
+  return a + (b - a) * x;
+}
+
+static Sample smoothstepInterpSample(Sample a, Sample b, float t) {
+  Sample result;
+  result.left = smoothstepInterp(a.left, b.left, t);
+  result.right = smoothstepInterp(a.right, b.right, t);
+  return result;
+}
+
+
+
 static void interStretchProcess(Processor *processor, const Buffer *src, Buffer *dst) {
   StretchData *data = processor->data;
   for(size_t i = 0; i < dst->length; ++i) {
@@ -86,18 +101,15 @@ static void interStretchProcess(Processor *processor, const Buffer *src, Buffer 
       sampleB = src->samples[srcIdx + 1];
     }
     float t = (float)i / data->factor - srcIdx;
-    if(data->interp == INTERP_LINEAR) {
-      dst->samples[i] = linearInterpSample(sampleA, sampleB, t);
-    }
-    if(data->interp == INTERP_POW2) {
-      dst->samples[i] = pow2InterpSample(sampleA, sampleB, t);
-    }
-    if(data->interp == INTERP_INV_LINEAR) {
-      dst->samples[i] = invLinearInterpSample(sampleA, sampleB, t);
-    }
-    if(data->interp == INTERP_BIT_FUCK) {
-      dst->samples[i] = bitFuckInterpSample(sampleA, sampleB, t);
-    }
+    #define DO(interp_value, interp_func)                   \
+      if(data->interp == interp_value) {                    \
+        dst->samples[i] = interp_func(sampleA, sampleB, t); \
+      }
+    DO(INTERP_LINEAR, linearInterpSample)
+    DO(INTERP_POW2, pow2InterpSample)
+    DO(INTERP_INV_LINEAR, invLinearInterpSample)
+    DO(INTERP_BIT_FUCK, bitFuckInterpSample)
+    DO(INTERP_SMOOTHSTEP, smoothstepInterpSample)
   }
 }
 
