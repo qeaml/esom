@@ -91,8 +91,12 @@ static void averageDestroy(Processor *processor) {
 }
 
 Processor mkAverageProcessor(void) {
+  AverageData *data = calloc(1, sizeof(AverageData));
+  for(int i = 0; i < SMALL_WINDOW_SIZE; ++i) {
+    data->weights[i] = 1.0f;
+  }
   Processor processor = {
-    .data = calloc(1, sizeof(AverageData)),
+    .data = data,
     .setFloatParam = averageSetFloatParam,
     .setStringParam = averageSetStringParam,
     .bufferSize = averageBufferSize,
