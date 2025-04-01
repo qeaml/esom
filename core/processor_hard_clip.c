@@ -8,10 +8,13 @@ typedef struct HardClipDataS {
   int synched;
 } HardClipData;
 
-static void hardClipSetParam(Processor *processor, const char *name, float value) {
+static void hardClipSetFloatParam(Processor *processor, const char *name, float value) {
   HardClipData *data = (HardClipData *)processor->data;
   PROCESSOR_PARAM(data, threshold);
   PROCESSOR_PARAM_BOOL(data, synched);
+}
+
+static void hardClipSetStringParam(Processor *processor, const char *name, const char *value) {
 }
 
 static size_t hardClipBufferSize(Processor *processor, size_t inputSize) {
@@ -62,14 +65,13 @@ static void hardClipDestroy(Processor *processor) {
 }
 
 Processor mkHardClipProcessor(void) {
-  Processor processor;
-  processor.setParam = hardClipSetParam;
-  processor.bufferSize = hardClipBufferSize;
-  processor.process = hardClipProcess;
-  processor.destroy = hardClipDestroy;
-  processor.data = malloc(sizeof(HardClipData));
-  HardClipData *data = (HardClipData *)processor.data;
-  data->threshold = 0.5;
-  data->synched = 0;
+  Processor processor = {
+    .data = calloc(1, sizeof(HardClipData)),
+    .setFloatParam = hardClipSetFloatParam,
+    .setStringParam = hardClipSetStringParam,
+    .bufferSize = hardClipBufferSize,
+    .process = hardClipProcess,
+    .destroy = hardClipDestroy
+  };
   return processor;
 }

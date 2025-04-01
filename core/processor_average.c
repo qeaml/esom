@@ -15,13 +15,16 @@ typedef struct {
   float weights[SMALL_WINDOW_SIZE];
 } AverageData;
 
-static void averageSetParam(Processor *processor, const char *name, float value) {
+static void averageSetFloatParam(Processor *processor, const char *name, float value) {
   AverageData *data = processor->data;
   PROCESSOR_PARAM_BOOL(data, bigWindow)
   PROCESSOR_PARAM(data, weights[0])
   PROCESSOR_PARAM(data, weights[1])
   PROCESSOR_PARAM(data, weights[2])
   PROCESSOR_PARAM(data, weights[3])
+}
+
+static void averageSetStringParam(Processor *processor, const char *name, const char *value) {
 }
 
 static size_t averageBufferSize(Processor *processor, size_t inputSize) {
@@ -88,16 +91,13 @@ static void averageDestroy(Processor *processor) {
 }
 
 Processor mkAverageProcessor(void) {
-  Processor processor;
-  processor.data = malloc(sizeof(AverageData));
-  AverageData *data = processor.data;
-  data->bigWindow = 0;
-  for(int i = 0; i < SMALL_WINDOW_SIZE; ++i) {
-    data->weights[i] = 1.0f;
-  }
-  processor.setParam = averageSetParam;
-  processor.bufferSize = averageBufferSize;
-  processor.process = averageProcess;
-  processor.destroy = averageDestroy;
+  Processor processor = {
+    .data = calloc(1, sizeof(AverageData)),
+    .setFloatParam = averageSetFloatParam,
+    .setStringParam = averageSetStringParam,
+    .bufferSize = averageBufferSize,
+    .process = averageProcess,
+    .destroy = averageDestroy
+  };
   return processor;
 }

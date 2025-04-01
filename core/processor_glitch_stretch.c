@@ -6,9 +6,12 @@ typedef struct GlitchStretchDataS {
   float factor;
 } GlitchStretchData;
 
-static void glitchStretchSetParam(Processor *processor, const char *name, float value) {
+static void glitchStretchSetFloatParam(Processor *processor, const char *name, float value) {
   GlitchStretchData *data = processor->data;
   PROCESSOR_PARAM(data, factor);
+}
+
+static void glitchStretchSetStringParam(Processor *processor, const char *name, const char *value) {
 }
 
 static size_t glitchStretchBufferSize(Processor *processor, size_t inputSize) {
@@ -29,13 +32,13 @@ static void glitchStretchDestroy(Processor *processor) {
 }
 
 Processor mkGlitchStretchProcessor(void) {
-  Processor processor;
-  processor.setParam = glitchStretchSetParam;
-  processor.bufferSize = glitchStretchBufferSize;
-  processor.process = glitchStretchProcess;
-  processor.destroy = glitchStretchDestroy;
-  GlitchStretchData *data = malloc(sizeof(GlitchStretchData));
-  data->factor = 1.0f;
-  processor.data = data;
+  Processor processor = {
+    .data = calloc(1, sizeof(GlitchStretchData)),
+    .setFloatParam = glitchStretchSetFloatParam,
+    .setStringParam = glitchStretchSetStringParam,
+    .bufferSize = glitchStretchBufferSize,
+    .process = glitchStretchProcess,
+    .destroy = glitchStretchDestroy
+  };
   return processor;
 }

@@ -6,9 +6,12 @@ typedef struct {
   float duration;
 } FadeOutData;
 
-static void fadeOutSetParam(Processor *processor, const char *name, float value) {
+static void fadeOutSetFloatParam(Processor *processor, const char *name, float value) {
   FadeOutData *data = processor->data;
   PROCESSOR_PARAM(data, duration);
+}
+
+static void fadeOutSetStringParam(Processor *processor, const char *name, const char *value) {
 }
 
 static size_t fadeOutBufferSize(Processor *processor, size_t inputSize) {
@@ -42,7 +45,8 @@ static void fadeOutDestroy(Processor *processor) {
 Processor mkFadeOutProcessor(void) {
   Processor processor = {
     .data = calloc(1, sizeof(FadeOutData)),
-    .setParam = fadeOutSetParam,
+    .setFloatParam = fadeOutSetFloatParam,
+    .setStringParam = fadeOutSetStringParam,
     .bufferSize = fadeOutBufferSize,
     .process = fadeOutProcess,
     .destroy = fadeOutDestroy

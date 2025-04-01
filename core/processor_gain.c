@@ -6,9 +6,12 @@ typedef struct GainDataS {
   float gain;
 } GainData;
 
-static void gainSetParam(Processor *processor, const char *name, float value) {
+static void gainSetFloatParam(Processor *processor, const char *name, float value) {
   GainData *data = (GainData *)processor->data;
   PROCESSOR_PARAM(data, gain);
+}
+
+static void gainSetStringParam(Processor *processor, const char *name, const char *value) {
 }
 
 static size_t gainBufferSize(Processor *processor, size_t inputSize) {
@@ -28,13 +31,13 @@ static void gainDestroy(Processor *processor) {
 }
 
 Processor mkGainProcessor(void) {
-  Processor processor;
-  processor.setParam = gainSetParam;
-  processor.bufferSize = gainBufferSize;
-  processor.process = gainProcess;
-  processor.destroy = gainDestroy;
-  processor.data = malloc(sizeof(GainData));
-  GainData *data = (GainData *)processor.data;
-  data->gain = 1.0;
+  Processor processor = {
+    .data = calloc(1, sizeof(GainData)),
+    .setFloatParam = gainSetFloatParam,
+    .setStringParam = gainSetStringParam,
+    .bufferSize = gainBufferSize,
+    .process = gainProcess,
+    .destroy = gainDestroy
+  };
   return processor;
 }

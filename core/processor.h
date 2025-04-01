@@ -6,20 +6,29 @@
 
 typedef struct ProcessorS Processor;
 
-typedef void(*ProcessorSetParamPfn)(Processor *processor, const char *param, float value);
+typedef void(*ProcessorSetFloatParamPfn)(Processor *processor, const char *param, float value);
+typedef void(*ProcessorSetStringParamPfn)(Processor *processor, const char *param, const char *value);
 typedef size_t(*ProcessorBufferSizePfn)(Processor *processor, size_t inputSize);
 typedef void(*ProcessorProcessPfn)(Processor *processor, const Buffer *src, Buffer *dst);
 typedef void(*ProcessorDestroyPfn)(Processor *processor);
 
 struct ProcessorS {
   void *data;
-  ProcessorSetParamPfn setParam;
+  ProcessorSetFloatParamPfn setFloatParam;
+  ProcessorSetStringParamPfn setStringParam;
   ProcessorBufferSizePfn bufferSize;
   ProcessorProcessPfn process;
   ProcessorDestroyPfn destroy;
 };
 
-void processorSetParam(Processor *processor, const char *param, float value);
+void processorSetFloatParam(Processor *processor, const char *param, float value);
+void processorSetStringParam(Processor *processor, const char *param, const char *value);
+#define processorSetParam(processor, name, value) \
+  _Generic((value),                               \
+    default: processorSetFloatParam,              \
+    char*: processorSetStringParam,               \
+    const char*: processorSetStringParam          \
+  )(processor, name, value)
 size_t bufferSize(Processor *processor, size_t inputSize);
 void processorProcess(Processor *processor, const Buffer *src, Buffer *dst);
 void processorDestroy(Processor *processor);
@@ -48,4 +57,5 @@ Processor mkProcessor(const char *name);
   X(FadeIn) \
   X(FadeOut) \
   X(Average) \
-  X(Power)
+  X(Power) \
+  X(Formula)

@@ -32,9 +32,7 @@ int main(int argc, char **argv) {
 
   Processor interp = mkProcessor("InterpStretch");
   processorSetParam(&interp, "factor", 4.0f);
-  // 3.0f -> INTERP_BIT_FUCK
-  // 4.0f -> INTERP_SMOOTHSTEP
-  processorSetParam(&interp, "interp", 4.0f);
+  processorSetParam(&interp, "interp", "BitFuck");
   Buffer stretched = applyProcessor(&raw, &interp);
   saveBufferToFile(&stretched, "test/stretched.wav");
   processorDestroy(&interp);
@@ -48,10 +46,16 @@ int main(int argc, char **argv) {
   destroyBuffer(&averaged);
 
   Processor power = mkProcessor("Power");
-  processorSetParam(&power, "exponent", 3.0f);
+  processorSetParam(&power, "exponent", 2.0f);
   Buffer powered = applyProcessor(&stretched, &power);
   saveBufferToFile(&powered, "test/powered.wav");
   destroyBuffer(&powered);
+
+  Processor formula = mkProcessor("Formula");
+  processorSetParam(&formula, "formula", "Cbrt");
+  Buffer calculated = applyProcessor(&stretched, &formula);
+  saveBufferToFile(&calculated, "test/calculated.wav");
+  processorDestroy(&formula);
 
   destroyBuffer(&stretched);
   return 0;

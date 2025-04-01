@@ -7,11 +7,13 @@ typedef struct {
   float granularity;
 } GrainStretchData;
 
-static void grainStretchSetParam(Processor *processor, const char *name, float value) {
+static void grainStretchSetFloatParam(Processor *processor, const char *name, float value) {
   GrainStretchData *data = processor->data;
-
   PROCESSOR_PARAM(data, factor)
   PROCESSOR_PARAM(data, granularity)
+}
+
+static void grainStretchSetStringParam(Processor *processor, const char *name, const char *value) {
 }
 
 static size_t grainStretchBufferSize(Processor *processor, size_t inputSize) {
@@ -43,16 +45,13 @@ static void grainStretchDestroy(Processor *processor) {
 }
 
 Processor mkGrainStretchProcessor(void) {
-  Processor processor;
-  processor.data = (GrainStretchData *)malloc(sizeof(GrainStretchData));
-  processor.setParam = grainStretchSetParam;
-  processor.bufferSize = grainStretchBufferSize;
-  processor.process = grainStretchProcess;
-  processor.destroy = grainStretchDestroy;
-
-  GrainStretchData *data = processor.data;
-  data->factor = 1.0;
-  data->granularity = 0.1;
-
+  Processor processor = {
+    .data = calloc(1, sizeof(GrainStretchData)),
+    .setFloatParam = grainStretchSetFloatParam,
+    .setStringParam = grainStretchSetStringParam,
+    .bufferSize = grainStretchBufferSize,
+    .process = grainStretchProcess,
+    .destroy = grainStretchDestroy
+  };
   return processor;
 }

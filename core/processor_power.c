@@ -7,9 +7,12 @@ typedef struct {
   float exponent;
 } PowerData;
 
-static void powerSetParam(Processor *processor, const char *name, float value) {
+static void powerSetFloatParam(Processor *processor, const char *name, float value) {
   PowerData *data = processor->data;
   PROCESSOR_PARAM(data, exponent);
+}
+
+static void powerSetStringParam(Processor *processor, const char *name, const char *value) {
 }
 
 static size_t powerBufferSize(Processor *processor, size_t inputSize) {
@@ -41,13 +44,13 @@ static void powerDestroy(Processor *processor) {
 }
 
 Processor mkPowerProcessor(const char *name) {
-  Processor processor;
-  processor.data = malloc(sizeof(PowerData));
-  PowerData *data = processor.data;
-  data->exponent = 1.0f;
-  processor.setParam = powerSetParam;
-  processor.bufferSize = powerBufferSize;
-  processor.process = powerProcess;
-  processor.destroy = powerDestroy;
+  Processor processor = {
+    .data = calloc(1, sizeof(PowerData)),
+    .setFloatParam = powerSetFloatParam,
+    .setStringParam = powerSetStringParam,
+    .bufferSize = powerBufferSize,
+    .process = powerProcess,
+    .destroy = powerDestroy
+  };
   return processor;
 }

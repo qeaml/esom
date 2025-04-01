@@ -1,7 +1,11 @@
 #include "processor.h"
 
-void processorSetParam(Processor *processor, const char *param, float value) {
-  processor->setParam(processor, param, value);
+void processorSetFloatParam(Processor *processor, const char *param, float value) {
+  processor->setFloatParam(processor, param, value);
+}
+
+void processorSetStringParam(Processor *processor, const char *param, const char *value) {
+  processor->setStringParam(processor, param, value);
 }
 
 size_t processorBufferSize(Processor *processor, size_t inputSize) {
