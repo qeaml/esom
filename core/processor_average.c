@@ -15,7 +15,7 @@ typedef struct {
   float weights[SMALL_WINDOW_SIZE];
 } AverageData;
 
-static void averageSetFloatParam(Processor *processor, const char *name, float value) {
+static void averageSetFloatParam(Processor *processor, const char *param, float value) {
   AverageData *data = processor->data;
   PROCESSOR_PARAM_BOOL(data, bigWindow)
   PROCESSOR_PARAM(data, weights[0])

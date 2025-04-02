@@ -6,7 +6,7 @@ typedef struct GainDataS {
   float gain;
 } GainData;
 
-static void gainSetFloatParam(Processor *processor, const char *name, float value) {
+static void gainSetFloatParam(Processor *processor, const char *param, float value) {
   GainData *data = (GainData *)processor->data;
   PROCESSOR_PARAM(data, gain);
 }

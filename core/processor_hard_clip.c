@@ -8,7 +8,7 @@ typedef struct HardClipDataS {
   int synched;
 } HardClipData;
 
-static void hardClipSetFloatParam(Processor *processor, const char *name, float value) {
+static void hardClipSetFloatParam(Processor *processor, const char *param, float value) {
   HardClipData *data = (HardClipData *)processor->data;
   PROCESSOR_PARAM(data, threshold);
   PROCESSOR_PARAM_BOOL(data, synched);

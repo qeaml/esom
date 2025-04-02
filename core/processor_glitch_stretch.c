@@ -6,7 +6,7 @@ typedef struct GlitchStretchDataS {
   float factor;
 } GlitchStretchData;
 
-static void glitchStretchSetFloatParam(Processor *processor, const char *name, float value) {
+static void glitchStretchSetFloatParam(Processor *processor, const char *param, float value) {
   GlitchStretchData *data = processor->data;
   PROCESSOR_PARAM(data, factor);
 }

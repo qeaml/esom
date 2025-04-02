@@ -7,7 +7,7 @@ typedef struct {
   float granularity;
 } GrainStretchData;
 
-static void grainStretchSetFloatParam(Processor *processor, const char *name, float value) {
+static void grainStretchSetFloatParam(Processor *processor, const char *param, float value) {
   GrainStretchData *data = processor->data;
   PROCESSOR_PARAM(data, factor)
   PROCESSOR_PARAM(data, granularity)

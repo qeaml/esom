@@ -1,0 +1,3 @@
+#!/bin/sh
+
+ffplay -hide_banner -nostats -nodisp -vn -autoexit "$1"

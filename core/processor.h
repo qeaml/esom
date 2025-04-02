@@ -37,13 +37,13 @@ Processor mkProcessor(const char *name);
 
 /* utility macro for processorSetParam implementations */
 #define PROCESSOR_PARAM(data, paramName) \
-  if(strcmp(name, #paramName) == 0) {    \
+  if(strcmp(param, #paramName) == 0) {   \
     data->paramName = value;             \
     return;                              \
   }
 
 #define PROCESSOR_PARAM_BOOL(data, paramName) \
-  if(strcmp(name, #paramName) == 0) {         \
+  if(strcmp(param, #paramName) == 0) {        \
     data->paramName = value != 0.0f;          \
     return;                                   \
   }
@@ -58,4 +58,5 @@ Processor mkProcessor(const char *name);
   X(FadeOut) \
   X(Average) \
   X(Power) \
-  X(Formula)
+  X(Formula) \
+  X(Grain)

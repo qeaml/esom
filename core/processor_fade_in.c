@@ -6,7 +6,7 @@ typedef struct {
   float duration;
 } FadeOutData;
 
-static void fadeInSetFloatParam(Processor *processor, const char *name, float value) {
+static void fadeInSetFloatParam(Processor *processor, const char *param, float value) {
   FadeOutData *data = processor->data;
   PROCESSOR_PARAM(data, duration);
 }

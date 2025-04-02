@@ -15,7 +15,7 @@ typedef struct {
   Interp interp;
 } StretchData;
 
-static void interpStretchSetFloatParam(Processor *processor, const char *name, float value) {
+static void interpStretchSetFloatParam(Processor *processor, const char *param, float value) {
   StretchData *data = processor->data;
   PROCESSOR_PARAM(data, factor);
 }

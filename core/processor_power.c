@@ -7,7 +7,7 @@ typedef struct {
   float exponent;
 } PowerData;
 
-static void powerSetFloatParam(Processor *processor, const char *name, float value) {
+static void powerSetFloatParam(Processor *processor, const char *param, float value) {
   PowerData *data = processor->data;
   PROCESSOR_PARAM(data, exponent);
 }
