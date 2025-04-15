@@ -8,6 +8,10 @@ void processorSetStringParam(Processor *processor, const char *param, const char
   processor->setStringParam(processor, param, value);
 }
 
+void processorSetBufferParam(Processor *processor, const char *param, const Buffer *value) {
+  processor->setBufferParam(processor, param, value);
+}
+
 size_t processorBufferSize(Processor *processor, size_t inputSize) {
   return processor->bufferSize(processor, inputSize);
 }
@@ -18,6 +22,15 @@ void processorProcess(Processor *processor, const Buffer *src, Buffer *dst) {
 
 void processorDestroy(Processor *processor) {
   processor->destroy(processor);
+}
+
+void noopSetFloatParam(Processor *processor, const char *param, float value) {
+}
+
+void noopSetStringParam(Processor *processor, const char *param, const char *value) {
+}
+
+void noopSetBufferParam(Processor *processor, const char *param, const Buffer *value) {
 }
 
 #define PROCESSOR_MK_FUNC(name) \

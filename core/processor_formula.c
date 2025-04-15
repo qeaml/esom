@@ -12,9 +12,6 @@ typedef enum {
 #define PROCESSOR_FORMULA(processor) \
   ((Formula*)&processor->data)
 
-static void formulaSetFloatParam(Processor *processor, const char *param, float value) {
-}
-
 #define NAMED_FORMULA(formulaName)                        \
   if(strcmp(value, #formulaName) == 0) {                  \
     *PROCESSOR_FORMULA(processor) = Formula##formulaName; \
@@ -71,8 +68,9 @@ static void formulaDestroy(Processor *processor) {
 Processor mkFormulaProcessor(void) {
   Processor processor = {
     .data = NULL,
-    .setFloatParam = formulaSetFloatParam,
+    .setFloatParam = noopSetFloatParam,
     .setStringParam = formulaSetStringParam,
+    .setBufferParam = noopSetBufferParam,
     .bufferSize = formulaBufferSize,
     .process = formulaProcess,
     .destroy = formulaDestroy,

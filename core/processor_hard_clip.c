@@ -14,9 +14,6 @@ static void hardClipSetFloatParam(Processor *processor, const char *param, float
   PROCESSOR_PARAM_BOOL(data, synched);
 }
 
-static void hardClipSetStringParam(Processor *processor, const char *name, const char *value) {
-}
-
 static size_t hardClipBufferSize(Processor *processor, size_t inputSize) {
   return inputSize;
 }
@@ -68,7 +65,8 @@ Processor mkHardClipProcessor(void) {
   Processor processor = {
     .data = calloc(1, sizeof(HardClipData)),
     .setFloatParam = hardClipSetFloatParam,
-    .setStringParam = hardClipSetStringParam,
+    .setStringParam = noopSetStringParam,
+    .setBufferParam = noopSetBufferParam,
     .bufferSize = hardClipBufferSize,
     .process = hardClipProcess,
     .destroy = hardClipDestroy

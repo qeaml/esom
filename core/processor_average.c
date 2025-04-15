@@ -24,9 +24,6 @@ static void averageSetFloatParam(Processor *processor, const char *param, float 
   PROCESSOR_PARAM(data, weights[3])
 }
 
-static void averageSetStringParam(Processor *processor, const char *name, const char *value) {
-}
-
 static size_t averageBufferSize(Processor *processor, size_t inputSize) {
   return inputSize;
 }
@@ -98,7 +95,8 @@ Processor mkAverageProcessor(void) {
   Processor processor = {
     .data = data,
     .setFloatParam = averageSetFloatParam,
-    .setStringParam = averageSetStringParam,
+    .setStringParam = noopSetStringParam,
+    .setBufferParam = noopSetBufferParam,
     .bufferSize = averageBufferSize,
     .process = averageProcess,
     .destroy = averageDestroy

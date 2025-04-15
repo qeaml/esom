@@ -12,9 +12,6 @@ static void grainSetFloatParam(Processor *processor, const char *param, float va
   PROCESSOR_PARAM(data, grainAdvance);
 }
 
-static void grainSetStringParam(Processor *processor, const char *param, const char *value) {
-}
-
 static size_t grainBufferSize(Processor *processor, size_t inputSize) {
   GrainData *data = processor->data;
   float factor = data->grainSize / data->grainAdvance;
@@ -53,7 +50,8 @@ Processor mkGrainProcessor() {
   Processor processor = {
     .data = calloc(1, sizeof(GrainData)),
     .setFloatParam = grainSetFloatParam,
-    .setStringParam = grainSetStringParam,
+    .setStringParam = noopSetStringParam,
+    .setBufferParam = noopSetBufferParam,
     .bufferSize = grainBufferSize,
     .process = grainProcess,
     .destroy = grainDestroy

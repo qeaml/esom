@@ -141,6 +141,7 @@ Processor mkInterpStretchProcessor(void) {
     .data = calloc(1, sizeof(StretchData)),
     .setFloatParam = interpStretchSetFloatParam,
     .setStringParam = interpStretchSetStringParam,
+    .setBufferParam = noopSetBufferParam,
     .bufferSize = interpStretchBufferSize,
     .process = interpStretchProcess,
     .destroy = interpStretchDestroy

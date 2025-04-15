@@ -48,6 +48,7 @@ Processor mkPowerProcessor(const char *name) {
     .data = calloc(1, sizeof(PowerData)),
     .setFloatParam = powerSetFloatParam,
     .setStringParam = powerSetStringParam,
+    .setBufferParam = noopSetBufferParam,
     .bufferSize = powerBufferSize,
     .process = powerProcess,
     .destroy = powerDestroy

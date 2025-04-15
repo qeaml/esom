@@ -11,9 +11,6 @@ static void gainSetFloatParam(Processor *processor, const char *param, float val
   PROCESSOR_PARAM(data, gain);
 }
 
-static void gainSetStringParam(Processor *processor, const char *name, const char *value) {
-}
-
 static size_t gainBufferSize(Processor *processor, size_t inputSize) {
   return inputSize;
 }
@@ -34,7 +31,8 @@ Processor mkGainProcessor(void) {
   Processor processor = {
     .data = calloc(1, sizeof(GainData)),
     .setFloatParam = gainSetFloatParam,
-    .setStringParam = gainSetStringParam,
+    .setStringParam = noopSetStringParam,
+    .setBufferParam = noopSetBufferParam,
     .bufferSize = gainBufferSize,
     .process = gainProcess,
     .destroy = gainDestroy

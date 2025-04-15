@@ -11,9 +11,6 @@ static void fadeOutSetFloatParam(Processor *processor, const char *param, float 
   PROCESSOR_PARAM(data, duration);
 }
 
-static void fadeOutSetStringParam(Processor *processor, const char *name, const char *value) {
-}
-
 static size_t fadeOutBufferSize(Processor *processor, size_t inputSize) {
   return inputSize;
 }
@@ -46,7 +43,8 @@ Processor mkFadeOutProcessor(void) {
   Processor processor = {
     .data = calloc(1, sizeof(FadeOutData)),
     .setFloatParam = fadeOutSetFloatParam,
-    .setStringParam = fadeOutSetStringParam,
+    .setStringParam = noopSetStringParam,
+    .setBufferParam = noopSetBufferParam,
     .bufferSize = fadeOutBufferSize,
     .process = fadeOutProcess,
     .destroy = fadeOutDestroy

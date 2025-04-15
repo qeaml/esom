@@ -13,9 +13,6 @@ static void grainStretchSetFloatParam(Processor *processor, const char *param, f
   PROCESSOR_PARAM(data, granularity)
 }
 
-static void grainStretchSetStringParam(Processor *processor, const char *name, const char *value) {
-}
-
 static size_t grainStretchBufferSize(Processor *processor, size_t inputSize) {
   GrainStretchData *data = processor->data;
   return inputSize * data->factor;
@@ -48,7 +45,8 @@ Processor mkGrainStretchProcessor(void) {
   Processor processor = {
     .data = calloc(1, sizeof(GrainStretchData)),
     .setFloatParam = grainStretchSetFloatParam,
-    .setStringParam = grainStretchSetStringParam,
+    .setStringParam = noopSetStringParam,
+    .setBufferParam = noopSetBufferParam,
     .bufferSize = grainStretchBufferSize,
     .process = grainStretchProcess,
     .destroy = grainStretchDestroy

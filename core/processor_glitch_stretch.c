@@ -11,9 +11,6 @@ static void glitchStretchSetFloatParam(Processor *processor, const char *param, 
   PROCESSOR_PARAM(data, factor);
 }
 
-static void glitchStretchSetStringParam(Processor *processor, const char *name, const char *value) {
-}
-
 static size_t glitchStretchBufferSize(Processor *processor, size_t inputSize) {
   GlitchStretchData *data = processor->data;
   return inputSize * data->factor;
@@ -35,7 +32,8 @@ Processor mkGlitchStretchProcessor(void) {
   Processor processor = {
     .data = calloc(1, sizeof(GlitchStretchData)),
     .setFloatParam = glitchStretchSetFloatParam,
-    .setStringParam = glitchStretchSetStringParam,
+    .setStringParam = noopSetStringParam,
+    .setBufferParam = noopSetBufferParam,
     .bufferSize = glitchStretchBufferSize,
     .process = glitchStretchProcess,
     .destroy = glitchStretchDestroy
