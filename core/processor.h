@@ -41,6 +41,7 @@ void processorDestroy(Processor *processor);
 void noopSetFloatParam(Processor *processor, const char *param, float value);
 void noopSetStringParam(Processor *processor, const char *param, const char *value);
 void noopSetBufferParam(Processor *processor, const char *param, const Buffer *value);
+void noopDestroy(Processor *processor);
 
 Processor mkProcessor(const char *name);
 
@@ -68,4 +69,5 @@ Processor mkProcessor(const char *name);
   X(Average) \
   X(Power) \
   X(Formula) \
-  X(Grain)
+  X(Grain) \
+  X(Sort)

@@ -7,7 +7,8 @@ typedef enum {
   InterpPow2,
   InterpInvLinear,
   InterpBitFuck,
-  InterpSmoothstep
+  InterpSmoothstep,
+  InterpRound,
 } Interp;
 
 typedef struct {
@@ -104,6 +105,17 @@ static Sample smoothstepInterpSample(Sample a, Sample b, float t) {
   return result;
 }
 
+static float roundInterp(float a, float b, float t) {
+  return t >= 0.5f ? a : b;
+}
+
+static Sample roundInterpSample(Sample a, Sample b, float t) {
+  Sample result;
+  result.left = roundInterp(a.left, b.left, t);
+  result.right = roundInterp(a.right, b.right, t);
+  return result;
+}
+
 #define CASE(interpName, interpFunc)                   \
   case Interp##interpName:                             \
     dst->samples[i] = interpFunc(sampleA, sampleB, t); \
@@ -128,6 +140,7 @@ static void interpStretchProcess(Processor *processor, const Buffer *src, Buffer
     CASE(InvLinear, invLinearInterpSample)
     CASE(BitFuck, bitFuckInterpSample)
     CASE(Smoothstep, smoothstepInterpSample)
+    CASE(Round, roundInterpSample)
     }
   }
 }

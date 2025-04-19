@@ -33,7 +33,7 @@ static void grainProcess(Processor *processor, const Buffer *src, Buffer *dst) {
   while(srcOff + grainSize < src->length) {
     for(size_t i = 0; i < grainSize; i++) {
       if(srcOff + i >= src->length || dstOff + i >= dst->length) {
-        break;
+        continue;
       }
       dst->samples[dstOff + i] = src->samples[srcOff + i];
     }

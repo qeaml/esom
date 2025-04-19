@@ -33,6 +33,9 @@ void noopSetStringParam(Processor *processor, const char *param, const char *val
 void noopSetBufferParam(Processor *processor, const char *param, const Buffer *value) {
 }
 
+void noopDestroy(Processor *processor) {
+}
+
 #define PROCESSOR_MK_FUNC(name) \
   Processor mk##name##Processor(void);
 
